@@ -11,12 +11,14 @@
 
 @interface JDDroppableView : UIView
 
-@property (nonatomic, weak) id<JDDroppableViewDelegate> delegate;
+@property (nonatomic, weak) id <JDDroppableViewDelegate> delegate;
 
 @property (nonatomic, assign) CGPoint returnPosition;
 @property (nonatomic, assign) BOOL shouldUpdateReturnPosition;
 
-- (id)initWithDropTarget:(UIView*)target;
+- (id)initWithDropTarget:(UIView *)target;
+- (id)initWithDropTargets:(NSArray *)targets;
+- (id)initWithFrame:(CGRect)frame andDropTargets:(NSArray *)targets;
 
 // target managment
 - (void)addDropTarget:(UIView*)target;
@@ -29,14 +31,19 @@
 // JDDroppableViewDelegate
 
 @protocol JDDroppableViewDelegate <NSObject>
+
 @optional
+
 // track dragging state
 - (void)droppableViewBeganDragging:(JDDroppableView*)view;
 - (void)droppableViewDidMove:(JDDroppableView*)view;
-- (void)droppableViewEndedDragging:(JDDroppableView*)view onTarget:(UIView*)target;
+- (void)droppableViewEndedDragging:(JDDroppableView*)view
+                          onTarget:(UIView*)target;
 
 // track target recognition
 - (void)droppableView:(JDDroppableView*)view enteredTarget:(UIView*)target;
 - (void)droppableView:(JDDroppableView*)view leftTarget:(UIView*)target;
-- (BOOL)shouldAnimateDroppableViewBack:(JDDroppableView*)view wasDroppedOnTarget:(UIView*)target;
+- (BOOL)shouldAnimateDroppableViewBack:(JDDroppableView*)view
+                    wasDroppedOnTarget:(UIView*)target;
+
 @end

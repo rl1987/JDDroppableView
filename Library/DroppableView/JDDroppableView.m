@@ -32,6 +32,35 @@
 
 @implementation JDDroppableView
 
+#pragma mark -
+#pragma mark Initialization
+
+- (id)initWithDropTargets:(NSArray *)targets
+{
+    self = [super init];
+    
+    if (self)
+    {
+        [self commonInit];
+        self.dropTargets = [NSMutableArray arrayWithArray:targets];
+    }
+    
+    return self;
+}
+
+- (id)initWithFrame:(CGRect)frame andDropTargets:(NSArray *)targets
+{
+    self = [super initWithFrame:frame];
+    
+    if (self)
+    {
+        [self commonInit];
+        self.dropTargets = [NSMutableArray arrayWithArray:targets];
+    }
+    
+    return self;
+}
+
 - (id)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
@@ -62,6 +91,7 @@
     self.shouldUpdateReturnPosition = YES;
 }
 
+#pragma mark -
 #pragma mark UIResponder (touch handling)
 
 - (void)touchesBegan:(NSSet*)touches withEvent:(UIEvent*)event
@@ -89,7 +119,8 @@
 	[self endDrag];
 }
 
-#pragma mark target managment
+#pragma mark -
+#pragma mark Target managment
 
 - (void)addDropTarget:(UIView*)target;
 {
@@ -116,7 +147,8 @@
     }]] mutableCopy];
 }
 
-#pragma mark dragging logic
+#pragma mark -
+#pragma mark Dragging logic
 
 - (void)beginDrag;
 {
@@ -231,7 +263,8 @@
     }
 }
 
-#pragma mark superview handling
+#pragma mark -
+#pragma mark Superview handling
 
 - (void)willMoveToSuperview:(id)newSuperview
 {

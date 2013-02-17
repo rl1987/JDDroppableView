@@ -17,7 +17,9 @@ static NSInteger sDROPVIEW_MARGIN = 3;
 static CGFloat   sCOUNT_OF_VIEWS_HORICONTALLY = 4.0;
 
 @interface TestViewController ()
+
 @property (nonatomic,assign) CGSize cardSize;
+
 @end
 
 @implementation TestViewController
@@ -25,12 +27,12 @@ static CGFloat   sCOUNT_OF_VIEWS_HORICONTALLY = 4.0;
 - (void)loadView
 {
 	[super loadView];
+    
     self.view.backgroundColor = [UIColor viewFlipsideBackgroundColor];
     
     // increase viewcount on ipad
-    if ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad) {
+    if ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad)
         sCOUNT_OF_VIEWS_HORICONTALLY = 6;
-    }
     
     // add button
     UIButton* button = [UIButton buttonWithType: UIButtonTypeCustom];
@@ -103,7 +105,8 @@ static CGFloat   sCOUNT_OF_VIEWS_HORICONTALLY = 4.0;
     return UIInterfaceOrientationIsPortrait(toInterfaceOrientation);
 }
 
-#pragma layout
+#pragma mark -
+#pragma mark Layout
 
 - (void)relayout
 {
@@ -170,11 +173,20 @@ static CGFloat   sCOUNT_OF_VIEWS_HORICONTALLY = 4.0;
 
 - (void)addView:(id)sender
 {
-    JDDroppableView * dropview = [[JDDroppableView alloc] initWithDropTarget: self.dropTarget1];
-    [dropview addDropTarget:self.dropTarget2];
+//    JDDroppableView * dropview =
+//    [[JDDroppableView alloc] initWithDropTarget:self.dropTarget1];
+//    
+//    [dropview addDropTarget:self.dropTarget2];
+    
+    JDDroppableView *dropview =
+    [[JDDroppableView alloc] initWithDropTargets:
+     [NSArray arrayWithObjects:self.dropTarget1,self.dropTarget2, nil]];
+    
     dropview.backgroundColor = [UIColor blackColor];
     dropview.layer.cornerRadius = 3.0;
-    dropview.frame = CGRectMake(self.lastPosition.x, self.lastPosition.y, self.cardSize.width, self.cardSize.height);
+    dropview.frame = CGRectMake(self.lastPosition.x, self.lastPosition.y,
+                                self.cardSize.width, self.cardSize.height);
+    
     dropview.delegate = self;
     
     [self.scrollView addSubview: dropview];
@@ -194,19 +206,21 @@ static CGFloat   sCOUNT_OF_VIEWS_HORICONTALLY = 4.0;
     CGFloat bottomScrollPosition = self.scrollView.contentSize.height;
     bottomScrollPosition -= self.scrollView.frame.size.height;
     bottomScrollPosition += self.scrollView.contentInset.top;
-    bottomScrollPosition = MAX(-self.scrollView.contentInset.top,bottomScrollPosition);
-    CGPoint newOffset = CGPointMake(-self.scrollView.contentInset.left, bottomScrollPosition);
-    if (newOffset.y != self.scrollView.contentOffset.y) {
+    bottomScrollPosition = MAX(-self.scrollView.contentInset.top,
+                               bottomScrollPosition);
+    CGPoint newOffset = CGPointMake(-self.scrollView.contentInset.left,
+                                    bottomScrollPosition);
+    
+    if (newOffset.y != self.scrollView.contentOffset.y) 
         [self.scrollView setContentOffset: newOffset animated: animated];
-    }
 }
 
+#pragma mark -
+#pragma mark JDDroppableViewDelegate
 
-#pragma JDDroppableViewDelegate
-
-- (void)droppableViewBeganDragging:(JDDroppableView*)view;
+- (void)droppableViewBeganDragging:(JDDroppableView*)view
 {
-//    NSLog(@"droppableViewBeganDragging");
+    NSLog(@"droppableViewBeganDragging");
     
 	[UIView animateWithDuration:0.33 animations:^{
         view.backgroundColor = [UIColor colorWithRed:1 green:0.5 blue:0 alpha:1];
@@ -214,14 +228,19 @@ static CGFloat   sCOUNT_OF_VIEWS_HORICONTALLY = 4.0;
     }];
 }
 
-- (void)droppableViewDidMove:(JDDroppableView*)view;
+- (void)droppableViewDidMove:(JDDroppableView*)view
 {
-//    NSLog(@"droppableViewDidMove:");
+    NSLog(@"droppableViewDidMove:");
+    
+    NSLog(@"%@",view);
+    
 }
 
-- (void)droppableViewEndedDragging:(JDDroppableView*)view onTarget:(UIView *)target
+- (void)droppableViewEndedDragging:(JDDroppableView*)view
+                          onTarget:(UIView *)target
 {
-//    NSLog(@"droppableViewEndedDragging:onTarget: %@", target == nil ? @"no target" : @"on target");
+    NSLog(@"droppableViewEndedDragging:onTarget: %@",
+          target == nil ? @"no target" : @"on target");
     
 	[UIView animateWithDuration:0.33 animations:^{
         if (!target) {
@@ -235,7 +254,8 @@ static CGFloat   sCOUNT_OF_VIEWS_HORICONTALLY = 4.0;
 
 - (void)droppableView:(JDDroppableView*)view enteredTarget:(UIView*)target
 {
-//    NSLog(@"droppableView:enteredTarget: %@", target == self.dropTarget1 ? @"one" : @"two");
+    NSLog(@"droppableView:enteredTarget: %@",
+          target == self.dropTarget1 ? @"one" : @"two");
     
     target.transform = CGAffineTransformMakeScale(1.5, 1.5);
     
@@ -248,15 +268,18 @@ static CGFloat   sCOUNT_OF_VIEWS_HORICONTALLY = 4.0;
 
 - (void)droppableView:(JDDroppableView*)view leftTarget:(UIView*)target
 {
-//    NSLog(@"droppableView:leftTarget: %@", target == self.dropTarget1 ? @"one" : @"two");
+    NSLog(@"droppableView:leftTarget: %@",
+          target == self.dropTarget1 ? @"one" : @"two");
     
     target.transform = CGAffineTransformMakeScale(1.0, 1.0);
     target.backgroundColor = [UIColor orangeColor];
 }
 
-- (BOOL)shouldAnimateDroppableViewBack:(JDDroppableView*)view wasDroppedOnTarget:(UIView*)target
+- (BOOL)shouldAnimateDroppableViewBack:(JDDroppableView*)view
+                    wasDroppedOnTarget:(UIView*)target
 {
-//    NSLog(@"shouldAnimateDroppableViewBack:wasDroppedOnTarget: %@", target == self.dropTarget1 ? @"one" : @"two");
+    NSLog(@"shouldAnimateDroppableViewBack:wasDroppedOnTarget: %@",
+          target == self.dropTarget1 ? @"one" : @"two");
     
 	[self droppableView:view leftTarget:target];
     
